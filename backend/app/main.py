@@ -208,8 +208,19 @@ def analyze_resume_with_gemini(filename: str, content: bytes, text: str, role: s
                 detail=f"AI API returned an error while processing the resume. Status: {response.status_code}",
             )
 
-    candidate = parse_gemini_candidate(response.json())
-    return normalize_candidate(candidate, filename, content, role, role_profile)
+    try:
+        candidate = parse_gemini_candidate(response.json())
+        return normalize_candidate(candidate, filename, content, role, role_profile)
+    except Exception as exc:
+        logger.warning("Gemini parsing failed, falling back to local analyzer: %s", exc)
+        try:
+            fallback = local_analyze_resume(filename, content, text, role, role_profile)
+            return normalize_candidate(fallback, filename, content, role, role_profile)
+        except Exception:
+            raise HTTPException(
+                status_code=502,
+                detail="Failed to parse resume with AI or fallback analyzer.",
+            )
 
 
 def local_analyze_resume(filename: str, content: bytes, text: str, role: str, role_profile: dict) -> dict:
@@ -322,6 +333,10 @@ def parse_gemini_candidate(response_data: dict) -> dict:
 
 def strip_json_fences(text: str) -> str:
     cleaned = text.strip()
+    # Safely extract first '{' to last '}' to handle any surrounding markdown or conversational text
+    match = re.search(r"(\{.*\})", cleaned, re.DOTALL)
+    if match:
+        return match.group(1).strip()
     if cleaned.startswith("```"):
         cleaned = re.sub(r"^```(?:json)?\s*", "", cleaned)
         cleaned = re.sub(r"\s*```$", "", cleaned)
