@@ -2,7 +2,7 @@ services:
   # FastAPI Backend (Dockerized Web Service)
   - type: web
     name: ai-recruiter-api
-    env: docker
+    runtime: docker
     dockerContext: ./backend
     dockerfilePath: ./backend/Dockerfile
     plan: free
@@ -15,12 +15,16 @@ services:
         value: http://localhost:3000,https://ai-recruiter-ui.onrender.com
 
   # React Frontend (Static Site - Free & Fast)
-  - type: static
+  - type: web
     name: ai-recruiter-ui
-    env: static
-    srcDir: ./frontend
+    runtime: static
+    rootDir: ./frontend
     buildCommand: npm install && npm run build
-    publishDir: dist
+    staticPublishPath: dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
     envVars:
       - key: VITE_API_BASE_URL
         fromService:
