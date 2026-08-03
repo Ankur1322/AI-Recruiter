@@ -12,7 +12,7 @@ export const CandidateProvider = ({ children }) => {
   };
 
   const getShortlisted = () => {
-    return candidates.filter(c => c.score >= 85);
+    return candidates.filter(c => c && typeof c.score === 'number' && c.score >= 85);
   };
 
   return (

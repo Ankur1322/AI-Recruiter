@@ -18,7 +18,7 @@ export default function Shortlist() {
     if (shortlisted.length === 0) return;
     const headers = ['Name', 'Email', 'Role', 'Match Score', 'Experience', 'Education', 'Matched Skills', 'Missing Skills'];
     const rows = shortlisted.map(c => [
-      `"${c.name}"`, `"${c.email}"`, `"${c.role}"`, `"${c.score}%"`, `"${c.experience} Years"`, `"${c.education}"`, `"${c.skills.join(', ')}"`, `"${c.missing}"`
+      `"${c.name}"`, `"${c.email}"`, `"${c.role}"`, `"${c.score}%"`, `"${c.experience} Years"`, `"${c.education}"`, `"${c.skills ? c.skills.join(', ') : ''}"`, `"${c.missing}"`
     ]);
     const csvContent = "data:text/csv;charset=utf-8," + [headers.join(','), ...rows.map(e => e.join(','))].join("\n");
     const encodedUri = encodeURI(csvContent);
@@ -54,7 +54,7 @@ export default function Shortlist() {
           <td>${c.score}%</td>
           <td>${c.experience} Years</td>
           <td>${c.education}</td>
-          <td>${c.skills.join(', ')}</td>
+          <td>${c.skills ? c.skills.join(', ') : ''}</td>
           <td>${c.missing}</td>
         </tr>`).join('')}
       </table>

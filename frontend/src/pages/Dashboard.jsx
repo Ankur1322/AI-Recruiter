@@ -73,7 +73,10 @@ export default function Dashboard() {
         });
         
         // If backend responds, use real data
-        newGenerated.push(response.data.candidate);
+        const candidateData = response.data && (response.data.candidate || response.data);
+        if (candidateData) {
+          newGenerated.push(candidateData);
+        }
         setFiles(prev => prev.map((f, index) => index === i ? { ...f, status: 'success' } : f));
 
       } catch (err) {
@@ -88,11 +91,11 @@ export default function Dashboard() {
   };
 
   const activeRole = JOB_ROLES.find(r => r.id === selectedRole);
-  const roleCandidates = candidates.filter(c => c.role === activeRole.name);
+  const roleCandidates = candidates.filter(c => c && c.role === activeRole.name);
   
   const currentCandidates = roleCandidates.filter(c => {
-    return filterSkill ? c.skills.some(s => s.toLowerCase().includes(filterSkill.toLowerCase())) : true;
-  }).sort((a,b) => b.score - a.score);
+    return filterSkill ? c.skills && c.skills.some(s => s && s.toLowerCase().includes(filterSkill.toLowerCase())) : true;
+  }).sort((a,b) => (b.score || 0) - (a.score || 0));
 
   const exportDashboardCSV = () => {
     if (currentCandidates.length === 0) return;
