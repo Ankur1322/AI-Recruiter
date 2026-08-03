@@ -58,7 +58,6 @@ export default function Dashboard() {
     let newGenerated = [];
     
     const activeRoleObj = JOB_ROLES.find(r => r.id === selectedRole);
-    const roleSkills = activeRoleObj.req.split(', ');
 
     for (let i = 0; i < files.length; i++) {
       setFiles(prev => prev.map((f, index) => index === i ? { ...f, status: 'uploading' } : f));
@@ -78,31 +77,9 @@ export default function Dashboard() {
         setFiles(prev => prev.map((f, index) => index === i ? { ...f, status: 'success' } : f));
 
       } catch (err) {
-        // Fallback: If backend processing endpoint fails or isn't built yet, use mock data
-        console.log("Falling back to mock data for presentation safety.");
-        await new Promise(r => setTimeout(r, 1200)); 
-        setFiles(prev => prev.map((f, index) => index === i ? { ...f, status: 'success' } : f));
-        
-        const newScore = Math.floor(Math.random() * 20) + 75; 
-        const mockExp = Math.floor(Math.random() * 6) + 1;
-        
-        const candidateSkills = newScore >= 85 ? roleSkills.slice(0, 3) : roleSkills.slice(0, 2);
-        const missingSkills = roleSkills.filter(s => !candidateSkills.includes(s));
-        
-        newGenerated.push({
-          id: Date.now() + i,
-          name: files[i].name.split('.')[0].replace(/[-_]/g, ' '),
-          email: `candidate${Math.floor(Math.random()*1000)}@email.com`,
-          score: newScore,
-          status: newScore >= 85 ? "Highly Recommended" : "Recommended",
-          experience: mockExp,
-          education: newScore >= 85 ? activeRoleObj.reqEdu : "Bachelor",
-          skills: candidateSkills,
-          missing: newScore >= 90 ? "None" : (missingSkills.length > 0 ? missingSkills.join(', ') : "None"),
-          matchedCount: candidateSkills.length,
-          unmatchedCount: newScore >= 90 ? 0 : missingSkills.length,
-          role: activeRoleObj.name
-        });
+        console.error("Resume processing failed:", err);
+        setFiles(prev => prev.map((f, index) => index === i ? { ...f, status: 'pending' } : f));
+        alert(`Could not process ${files[i].name}. Please check that the backend is running and the resume contains readable text.`);
       }
     }
     

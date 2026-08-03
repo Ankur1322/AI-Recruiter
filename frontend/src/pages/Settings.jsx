@@ -109,7 +109,7 @@ export default function Settings() {
                 <div className="flex justify-between items-center">
                   <div>
                     <h4 className="text-sm font-semibold text-gray-900 dark:text-white">SMS Alerts</h4>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Get immediate pings for candidates scoring > 90%.</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Get immediate pings for candidates scoring &gt; 90%.</p>
                   </div>
                   <ToggleButton active={smsAlerts} onClick={() => setSmsAlerts(!smsAlerts)} />
                 </div>
