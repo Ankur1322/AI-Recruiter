@@ -1,0 +1,29 @@
+services:
+  # FastAPI Backend (Dockerized Web Service)
+  - type: web
+    name: ai-recruiter-api
+    env: docker
+    dockerContext: ./backend
+    dockerfilePath: ./backend/Dockerfile
+    plan: free
+    envVars:
+      - key: GEMINI_API_KEY
+        sync: false  # You will paste your actual API key here in the Render dashboard
+      - key: GEMINI_MODEL
+        value: gemini-2.5-flash
+      - key: ALLOWED_ORIGINS
+        value: http://localhost:3000,https://ai-recruiter-ui.onrender.com
+
+  # React Frontend (Static Site - Free & Fast)
+  - type: static
+    name: ai-recruiter-ui
+    env: static
+    srcDir: ./frontend
+    buildCommand: npm install && npm run build
+    publishDir: dist
+    envVars:
+      - key: VITE_API_BASE_URL
+        fromService:
+          type: web
+          name: ai-recruiter-api
+          property: host

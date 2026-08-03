@@ -67,14 +67,20 @@ logger = logging.getLogger(__name__)
 
 app = FastAPI(title="AI Recruiter API")
 
+# Configure allowed origins dynamically for local development and cloud production
+allowed_origins = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+]
+env_origins = os.getenv("ALLOWED_ORIGINS")
+if env_origins:
+    allowed_origins.extend([origin.strip() for origin in env_origins.split(",") if origin.strip()])
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",
-        "http://127.0.0.1:3000",
-        "http://localhost:5173",
-        "http://127.0.0.1:5173",
-    ],
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
