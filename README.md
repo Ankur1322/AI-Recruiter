@@ -54,6 +54,6 @@ The PostgreSQL database is structured to handle applicants and job parameters ef
 
 1. Clone this repository: `git clone https://github.com/Ankur1322/AI-Recruiter.git`
 2. Open the folder: `cd AI-Recruiter`
-3. Set up environment variables: `cp .env.example .env` (Add your actual API key in `AI_API_KEY` and adjust `OPENAI_MODEL` if needed).
+3. Set up environment variables: `cp .env.example .env` (Add your actual Gemini API key in `GEMINI_API_KEY` and adjust `GEMINI_MODEL` if needed).
 4. Run with Docker: `docker-compose up --build`
 5. View the Frontend at `http://localhost:3000` and Backend API at `http://localhost:8000/docs`.
