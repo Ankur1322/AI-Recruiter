@@ -55,7 +55,6 @@ JOB_ROLES = {
     },
 }
 
-OPENAI_API_URL = "https://api.openai.com/v1/chat/completions"
 MAX_RESUME_CHARS = 18000
 
 # 1. Configure Logging
@@ -114,14 +113,14 @@ async def process_resume(file: UploadFile = File(...), role: str = Form(...)):
             detail="Could not extract readable text from this resume",
         )
 
-    candidate = analyze_resume_with_openai(
+    candidate = analyze_resume_with_gemini(
         filename=file.filename or "resume",
         content=content,
         text=text,
         role=role,
     )
 
-    logger.info("OpenAI processed resume %s for %s with score %s", file.filename, role, candidate["score"])
+    logger.info("Gemini processed resume %s for %s with score %s", file.filename, role, candidate["score"])
     return {"candidate": candidate}
 
 
@@ -150,46 +149,48 @@ def stable_candidate_id(filename: str, content: bytes) -> int:
     return int(digest[:12], 16)
 
 
-def analyze_resume_with_openai(filename: str, content: bytes, text: str, role: str) -> dict:
-    api_key = os.getenv("AI_API_KEY")
+def analyze_resume_with_gemini(filename: str, content: bytes, text: str, role: str) -> dict:
+    api_key = os.getenv("GEMINI_API_KEY")
     if not api_key:
         raise HTTPException(
             status_code=500,
-            detail="API key is missing. Set AI_API_KEY in .env.",
+            detail="API key is missing. Set GEMINI_API_KEY in .env.",
         )
 
-    model = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
+    model = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
     role_profile = JOB_ROLES[role]
     prompt = build_resume_analysis_prompt(filename, text, role, role_profile)
 
+    api_url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={api_key}"
+
     try:
         response = requests.post(
-            OPENAI_API_URL,
+            api_url,
             headers={
                 "Content-Type": "application/json",
-                "Authorization": f"Bearer {api_key}",
             },
             json={
-                "model": model,
-                "temperature": 0.1,
-                "response_format": {"type": "json_object"},
-                "messages": [
+                "contents": [
                     {
-                        "role": "system",
-                        "content": "You are an AI recruiter that returns only valid JSON.",
-                    },
-                    {"role": "user", "content": prompt},
+                        "parts": [
+                            {"text": prompt}
+                        ]
+                    }
                 ],
-                "max_tokens": 800,
+                "generationConfig": {
+                    "responseMimeType": "application/json",
+                    "temperature": 0.1,
+                    "maxOutputTokens": 4000,
+                }
             },
             timeout=45,
         )
     except requests.RequestException as exc:
-        logger.exception("OpenAI request failed")
+        logger.exception("Gemini request failed")
         raise HTTPException(status_code=502, detail="Could not reach the AI API.") from exc
 
     if not response.ok:
-        logger.error("OpenAI API error %s: %s", response.status_code, response.text[:500])
+        logger.error("Gemini API error %s: %s", response.status_code, response.text[:500])
         # Try a local fallback analyzer so the app can still produce results for demos
         try:
             fallback = local_analyze_resume(filename, content, text, role, role_profile)
@@ -201,7 +202,7 @@ def analyze_resume_with_openai(filename: str, content: bytes, text: str, role: s
                 detail=f"AI API returned an error while processing the resume. Status: {response.status_code}",
             )
 
-    candidate = parse_openai_candidate(response.json())
+    candidate = parse_gemini_candidate(response.json())
     return normalize_candidate(candidate, filename, content, role, role_profile)
 
 
@@ -299,11 +300,11 @@ Resume text:
 """.strip()
 
 
-def parse_openai_candidate(response_data: dict) -> dict:
+def parse_gemini_candidate(response_data: dict) -> dict:
     try:
-        text = response_data["choices"][0]["message"]["content"]
+        text = response_data["candidates"][0]["content"]["parts"][0]["text"]
     except (KeyError, IndexError, TypeError) as exc:
-        logger.error("Unexpected OpenAI response shape: %s", response_data)
+        logger.error("Unexpected Gemini response shape: %s", response_data)
         raise HTTPException(status_code=502, detail="AI API returned an unexpected response.") from exc
 
     try:
