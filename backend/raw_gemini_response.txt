@@ -1,0 +1,31 @@
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "{\n  \"name\": \"Ankur Rawat\",\n  \"email\": \"ankurrawat344@gmail.com\",\n  \"score\": 0,\n  \"status\": \"Needs Review\",\n  \"experience\": 0,\n  \"education\": \"Master\",\n  \"skills\": [\"Python\", \"Deep Learning\", \"NLP\"],\n  \"missing\": \"PyTorch\",\n  \"matchedCount\": 3,\n  \"unmatchedCount\": 1\n}"
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "index": 0
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 916,
+    "candidatesTokenCount": 107,
+    "totalTokenCount": 2337,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 916
+      }
+    ],
+    "thoughtsTokenCount": 1314,
+    "serviceTier": "standard"
+  },
+  "modelVersion": "gemini-2.5-flash",
+  "responseId": "TdZwavOPJYfXjuMP9NPl-Qw"
+}
