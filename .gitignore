@@ -1,0 +1,37 @@
+# ==========================================
+# SECRETS & ENVIRONMENT (CRITICAL)
+# ==========================================
+.env
+.env.local
+*.pem
+
+# ==========================================
+# PYTHON / FASTAPI (BACKEND)
+# ==========================================
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+env/
+.venv/
+pip-log.txt
+.pytest_cache/
+
+# ==========================================
+# NODE / REACT / VITE (FRONTEND)
+# ==========================================
+node_modules/
+dist/
+build/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ==========================================
+# OS & EDITOR FILES
+# ==========================================
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
