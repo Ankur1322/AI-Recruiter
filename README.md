@@ -37,4 +37,4 @@ The PostgreSQL database is structured to handle applicants and job parameters ef
 2. Open the folder: `cd AI-Recruiter`
 3. Set up environment variables: `cp .env.example .env` (Add your actual API keys in the `.env` file).
 4. Run with Docker: `docker-compose up --build`
-5. View the Frontend at `http://localhost:5173` and Backend API at `http://localhost:8000/docs`.
+5. View the Frontend at `http://localhost:3000` and Backend API at `http://localhost:8000/docs`.
