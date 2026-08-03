@@ -13,21 +13,21 @@ The platform uses a modern, decoupled microservices architecture:
 * **Infrastructure:** Fully containerized using Docker and `docker-compose` for seamless local deployment.
 
 ai_recruiter_project/
-├── backend/                # FastAPI application source
-│   ├── app/                # Core application logic, routers, and schemas
-│   ├── main.py             # Application entry point
-│   ├── test_main.py        # Pytest test suite
-│   ├── requirements.txt    # Python dependency locking
-│   └── Dockerfile          # Backend container configuration
-├── frontend/               # React/Vite application source
-│   ├── src/                # UI components (Dashboard, Visualizations)
-│   ├── package.json        # Node dependency locking
-│   └── Dockerfile          # Frontend container configuration
-├── sample_dataset/         # Sample resumes and algorithmic output data
-├── docker-compose.yml      # Multi-container orchestration definition
-├── database_schema.sql     # Initial database seeding/migrations
-├── .gitignore              # Ignored paths and cache files
-└── README.md               # You are here
+├── backend/                         # FastAPI application source
+│   ├── app/                         # Core application logic, routers, and schemas
+│   │   ├── main.py                  # Application entry point
+│   │   └── test_main.py             # Pytest test suite
+│   ├── requirements.txt             # Python dependency locking
+│   └── Dockerfile                   # Backend container configuration
+├── frontend/                        # React/Vite application source
+│   ├── src/                         # UI components (Dashboard, Visualizations)
+│   ├── package.json                 # Node dependency locking
+│   └── Dockerfile                   # Frontend container configuration
+├── sample_dataset/                  # Sample resumes and algorithmic output data
+├── docker-compose.yml               # Multi-container orchestration definition
+├── database_schema.sql              # Initial database seeding/migrations
+├── .gitignore                       # Ignored paths and cache files
+└── README.md                        # You are here
 ---
 
 ## 🗄️ Database Schema
