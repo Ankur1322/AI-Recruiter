@@ -18,7 +18,11 @@ const JOB_ROLES = [
 ];
 
 // Ensure this matches your Docker setup
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ? `${import.meta.env.VITE_API_BASE_URL}/api` : 'http://localhost:8000/api';
+let baseApiUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+if (baseApiUrl && !baseApiUrl.startsWith('http://') && !baseApiUrl.startsWith('https://')) {
+  baseApiUrl = `https://${baseApiUrl}`;
+}
+const API_BASE_URL = `${baseApiUrl.replace(/\/$/, '')}/api`;
 
 export default function Dashboard() {
   const { candidates, addCandidates } = useCandidates();
