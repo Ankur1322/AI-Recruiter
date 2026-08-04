@@ -2,6 +2,9 @@
 
 An enterprise-grade, AI-driven recruitment platform built to evaluate, rank, and match candidate profiles against job descriptions.
 
+[![Live App on Render](https://img.shields.io/badge/Render-Live_App-blue?style=for-the-badge&logo=render&logoColor=white)](https://ai-recruiter-ui-tbqw.onrender.com)
+[![System Design Report](https://img.shields.io/badge/Documentation-System_Design_Report-indigo?style=for-the-badge&logo=googledocs&logoColor=white)](./SYSTEM_DESIGN.pdf)
+
 ---
 
 ## 🏗 System Architecture
