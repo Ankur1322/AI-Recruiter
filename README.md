@@ -45,3 +45,4 @@ The PostgreSQL database is structured to handle applicants and job parameters ef
 3. Set up environment variables: `cp .env.example .env` (Add your actual Gemini API key in `GEMINI_API_KEY` and adjust `GEMINI_MODEL` if needed).
 4. Run with Docker: `docker-compose up --build`
 5. View the Frontend at `http://localhost:3000` and Backend API at `http://localhost:8000/docs`.
+6. After you opened the app wait for the connection when it says connect healthy then upload resume  
